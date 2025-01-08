@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -14,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Engine extends JFrame {
+public class Engine extends JFrame implements ActionListener {
 	// Atributos de la clase Engine
 	// Marco de la ventana
 	private Container panelPrincipal;
@@ -25,11 +27,11 @@ public class Engine extends JFrame {
 	private JPanel displayPanel;
 	private JPanel botonesOperadores;
 	private JPanel botonesRegulares;
-	private JTextField pantalla;
+
 	// Panel sur que contiene los botones
 	private JPanel buttonPanel;
 	// Display
-	private JTextField display;
+	private JTextField pantalla;
 	// Botones
 	private JButton n0;
 	private JButton n1;
@@ -74,13 +76,14 @@ public class Engine extends JFrame {
 
 		// Configuro el panel donde se van a ver los numeros seleccionados por los
 		// botones
-		this.pantalla = new JTextField(40);
+		this.pantalla = new JTextField(20);
 		this.pantalla.setEditable(false);// Con este comando el usuario no va a poder escribir en la pantalla
 		this.pantalla.setHorizontalAlignment(JTextField.RIGHT);// Esto permite que los numeros seleccionados aparezcan a
 																// la derecha de la pantalla
 		this.pantalla.setPreferredSize(new Dimension(50, 50));// Permite modificar el largo y el ancho (El largo no
 																// funciona)
 		this.pantalla.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));// Color borde
+		this.pantalla.setFont(new Font("Verdana", Font.BOLD, 20));
 		this.pantalla.setBackground(Color.LIGHT_GRAY);// Fondo
 		this.pantalla.setForeground(Color.BLACK);// Texto
 		this.displayPanel.add(this.pantalla);
@@ -91,7 +94,7 @@ public class Engine extends JFrame {
 		this.buttonPanel.setLayout(new FlowLayout());
 
 		// Configuro los botones
-		this.botonesOperadores = new JPanel(new GridLayout(4, 3, 5, 5));
+		this.botonesOperadores = new JPanel(new GridLayout(5, 3, 5, 5));
 		this.botonesRegulares = new JPanel(new GridLayout(5, 1, 5, 5));
 
 		// Inicializo los botones con el metodo
@@ -122,6 +125,9 @@ public class Engine extends JFrame {
 		this.buttonPanel.add(this.botonesOperadores, BorderLayout.EAST);
 		this.buttonPanel.setSize(800, 500);
 
+		// Asignar eventos a los botones
+		addActionEvent();
+
 		// Agrego los paneles al panel principal
 		this.panelPrincipal.add(this.buttonPanel);
 
@@ -138,24 +144,24 @@ public class Engine extends JFrame {
 	// de boton es para darle propiedades segun su tipo
 	private void inicializarBotones() {
 		// Botones numéricos
-		n0 = createButton("0", ButtonType.REGULAR);
-		n1 = createButton("1", ButtonType.REGULAR);
-		n2 = createButton("2", ButtonType.REGULAR);
-		n3 = createButton("3", ButtonType.REGULAR);
-		n4 = createButton("4", ButtonType.REGULAR);
-		n5 = createButton("5", ButtonType.REGULAR);
-		n6 = createButton("6", ButtonType.REGULAR);
-		n7 = createButton("7", ButtonType.REGULAR);
-		n8 = createButton("8", ButtonType.REGULAR);
-		n9 = createButton("9", ButtonType.REGULAR);
+		this.n0 = createButton("0", ButtonType.REGULAR);
+		this.n1 = createButton("1", ButtonType.REGULAR);
+		this.n2 = createButton("2", ButtonType.REGULAR);
+		this.n3 = createButton("3", ButtonType.REGULAR);
+		this.n4 = createButton("4", ButtonType.REGULAR);
+		this.n5 = createButton("5", ButtonType.REGULAR);
+		this.n6 = createButton("6", ButtonType.REGULAR);
+		this.n7 = createButton("7", ButtonType.REGULAR);
+		this.n8 = createButton("8", ButtonType.REGULAR);
+		this.n9 = createButton("9", ButtonType.REGULAR);
 
 		// Botones de operadores
-		add = createButton("+", ButtonType.OPERATOR);
-		subtract = createButton("-", ButtonType.OPERATOR);
-		multiply = createButton("*", ButtonType.OPERATOR);
-		divide = createButton("/", ButtonType.OPERATOR);
-		equal = createButton("=", ButtonType.OPERATOR);
-		reset = createButton("C", ButtonType.OPERATOR);
+		this.add = createButton("+", ButtonType.OPERATOR);
+		this.subtract = createButton("-", ButtonType.OPERATOR);
+		this.multiply = createButton("*", ButtonType.OPERATOR);
+		this.divide = createButton("/", ButtonType.OPERATOR);
+		this.equal = createButton("=", ButtonType.OPERATOR);
+		this.reset = createButton("C", ButtonType.OPERATOR);
 	}
 
 	// Metodo que se encarga de crear los botones que es llamado en la clase que se
@@ -173,6 +179,113 @@ public class Engine extends JFrame {
 		boton.setFont(new Font("Arial", Font.BOLD, 20)); // Fuente grande
 		boton.setFocusPainted(false); // Eliminar borde de foco
 		return boton;
+
+	}
+
+	private void addActionEvent() {
+		JButton[] buttons = { n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, divide, multiply, subtract, add, equal, reset };
+		for (JButton button : buttons) {
+			button.addActionListener(this);
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando = e.getActionCommand(); // Contiene el contenido del boton
+		switch (comando) {
+		case "0":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "1":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "2":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "3":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "4":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "5":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "6":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "7":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "8":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "9":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
+		case "+":
+			if (!this.pantalla.getText().isEmpty()) {
+				this.num1 = Integer.parseInt(pantalla.getText());
+				this.operation = comando.charAt(0);
+				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
+			}
+			break;
+		case "-":
+			if (!this.pantalla.getText().isEmpty()) {
+				this.num1 = Integer.parseInt(pantalla.getText());
+				this.operation = comando.charAt(0);
+				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
+			}else {
+				this.pantalla.setText(this.pantalla.getText() + comando);
+				this.num1 = this.num1 * -1;
+			}
+			break;
+		case "/":
+			if (!this.pantalla.getText().isEmpty()) {
+				this.num1 = Integer.parseInt(pantalla.getText());
+				this.operation = comando.charAt(0);
+				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
+			}
+			break;
+		case "*":
+			if (!this.pantalla.getText().isEmpty()) {
+				this.num1 = Integer.parseInt(pantalla.getText());
+				this.operation = comando.charAt(0);
+				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
+			}
+			break;
+		case "=":
+			if (!this.pantalla.getText().isEmpty()) {
+				this.num2 = Integer.parseInt(pantalla.getText());
+				this.result = operacion(this.num1, this.num2, this.operation);
+				this.pantalla.setText(String.valueOf(this.result));
+			}
+			break;
+		case "C":
+			// Reinicio la pantalla y pongo los numeros a 0
+			this.pantalla.setText("");
+			this.num1 = 0;
+			this.num2 = 0;
+			break;
+
+		default:
+		}
+
+	}
+
+	private int operacion(int num1, int num2, char operador) {
+		switch (operation) {
+		case '+':
+			return num1 + num2;
+		case '-':
+			return num1 - num2;
+		case '*':
+			return num1 * num2;
+		case '/':
+			return num2 != 0 ? num1 / num2 : 0; // Evitar división por 0
+		default:
+			return 0;
+		}
 
 	}
 }
