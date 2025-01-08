@@ -235,7 +235,7 @@ public class Engine extends JFrame implements ActionListener {
 				this.num1 = Integer.parseInt(pantalla.getText());
 				this.operation = comando.charAt(0);
 				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
-			}else {
+			} else {
 				this.pantalla.setText(this.pantalla.getText() + comando);
 				this.num1 = this.num1 * -1;
 			}
@@ -259,6 +259,10 @@ public class Engine extends JFrame implements ActionListener {
 				this.num2 = Integer.parseInt(pantalla.getText());
 				this.result = operacion(this.num1, this.num2, this.operation);
 				this.pantalla.setText(String.valueOf(this.result));
+				if (comando == "/" || this.num2 <= 0) {
+					this.pantalla.setText("No se puede dividir entre 0");
+
+				}
 			}
 			break;
 		case "C":
