@@ -49,6 +49,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton add;
 	private JButton equal;
 	private JButton reset;
+	private JButton eliminar;
 
 	// Tipos de boton
 	private enum ButtonType {
@@ -68,7 +69,7 @@ public class Engine extends JFrame implements ActionListener {
 
 		// Propiedades de la ventana
 		this.setLocation(50, 100);
-		this.setSize(500, 500);
+		this.setSize(500, 600);
 
 		// Panel de arriba
 		this.displayPanel = new JPanel();
@@ -113,6 +114,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.botonesRegulares.add(this.reset);
 		this.botonesRegulares.add(this.n0);
 		this.botonesRegulares.add(this.equal);
+		this.botonesRegulares.add(this.eliminar);
 
 		// Agregar los botones de operaciones
 		this.botonesOperadores.add(this.add);
@@ -162,6 +164,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.divide = createButton("/", ButtonType.OPERATOR);
 		this.equal = createButton("=", ButtonType.OPERATOR);
 		this.reset = createButton("C", ButtonType.OPERATOR);
+		this.eliminar = createButton("←", ButtonType.OPERATOR);
 	}
 
 	// Metodo que se encarga de crear los botones que es llamado en la clase que se
@@ -177,13 +180,13 @@ public class Engine extends JFrame implements ActionListener {
 			boton.setBackground(Color.WHITE);
 		}
 		boton.setFont(new Font("Arial", Font.BOLD, 20)); // Fuente grande
-		boton.setFocusPainted(false); // Eliminar borde de foco
+		boton.setFocusPainted(false); // Eliminar borde 
 		return boton;
 
 	}
 
 	private void addActionEvent() {
-		JButton[] buttons = { n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, divide, multiply, subtract, add, equal, reset };
+		JButton[] buttons = { this.n0, this.n1, this.n2, this.n3, this.n4, this.n5, this.n6, this.n7, this.n8, this.n9, this.divide, this.multiply, this.subtract, this.add, this.equal, this.reset, this.eliminar };
 		for (JButton button : buttons) {
 			button.addActionListener(this);
 		}
@@ -257,12 +260,13 @@ public class Engine extends JFrame implements ActionListener {
 		case "=":
 			if (!this.pantalla.getText().isEmpty()) {
 				this.num2 = Integer.parseInt(pantalla.getText());
-				this.result = operacion(this.num1, this.num2, this.operation);
-				this.pantalla.setText(String.valueOf(this.result));
-				if (comando == "/" || this.num2 <= 0) {
-					this.pantalla.setText("No se puede dividir entre 0");
-
+				if (this.operation == '/' && this.num2 <= 0) {
+					this.pantalla.setText("Error: No se puede dividir entre 0");
+				}else {
+					this.result = operacion(this.num1, this.num2, this.operation);
+					this.pantalla.setText(String.valueOf(this.result));
 				}
+				
 			}
 			break;
 		case "C":
@@ -271,6 +275,11 @@ public class Engine extends JFrame implements ActionListener {
 			this.num1 = 0;
 			this.num2 = 0;
 			break;
+		case "←":
+			String textoActual = this.pantalla.getText();
+			if (!textoActual.isEmpty()) {
+				this.pantalla.setText(textoActual.substring(0, textoActual.length()-1));
+			}
 
 		default:
 		}
@@ -286,7 +295,7 @@ public class Engine extends JFrame implements ActionListener {
 		case '*':
 			return num1 * num2;
 		case '/':
-			return num2 != 0 ? num1 / num2 : 0; // Evitar división por 0
+			return num1 / num2;
 		default:
 			return 0;
 		}
