@@ -50,6 +50,7 @@ public class Engine extends JFrame implements ActionListener {
 	private JButton equal;
 	private JButton reset;
 	private JButton eliminar;
+	private JButton coma;
 
 	// Tipos de boton
 	private enum ButtonType {
@@ -57,7 +58,7 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	// Almacenar temporalmente ciertos valores
-	private int num1, num2, result;
+	private double num1, num2, result;
 	private char operation;
 
 	public Engine(String msg) {
@@ -73,7 +74,7 @@ public class Engine extends JFrame implements ActionListener {
 
 		// Panel de arriba
 		this.displayPanel = new JPanel();
-		this.displayPanel.setLayout(new FlowLayout());
+		
 
 		// Configuro el panel donde se van a ver los numeros seleccionados por los
 		// botones
@@ -115,6 +116,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.botonesRegulares.add(this.n0);
 		this.botonesRegulares.add(this.equal);
 		this.botonesRegulares.add(this.eliminar);
+		this.botonesRegulares.add(this.coma);
 
 		// Agregar los botones de operaciones
 		this.botonesOperadores.add(this.add);
@@ -132,6 +134,7 @@ public class Engine extends JFrame implements ActionListener {
 
 		// Agrego los paneles al panel principal
 		this.panelPrincipal.add(this.buttonPanel);
+		this.displayPanel.setLayout(new FlowLayout());
 
 		// Hacer visible la ventana
 		this.setVisible(true);
@@ -140,6 +143,8 @@ public class Engine extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 	}
+	
+	
 
 	// Metodo que se encarga de inicializar todos los botones de forma automatica
 	// llamando asi a el metodo de createButton que se encarga de verificar que tipo
@@ -156,6 +161,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.n7 = createButton("7", ButtonType.REGULAR);
 		this.n8 = createButton("8", ButtonType.REGULAR);
 		this.n9 = createButton("9", ButtonType.REGULAR);
+		this.coma = createButton(".", ButtonType.REGULAR);
 
 		// Botones de operadores
 		this.add = createButton("+", ButtonType.OPERATOR);
@@ -165,6 +171,7 @@ public class Engine extends JFrame implements ActionListener {
 		this.equal = createButton("=", ButtonType.OPERATOR);
 		this.reset = createButton("C", ButtonType.OPERATOR);
 		this.eliminar = createButton("←", ButtonType.OPERATOR);
+		
 	}
 
 	// Metodo que se encarga de crear los botones que es llamado en la clase que se
@@ -186,7 +193,7 @@ public class Engine extends JFrame implements ActionListener {
 	}
 
 	private void addActionEvent() {
-		JButton[] buttons = { this.n0, this.n1, this.n2, this.n3, this.n4, this.n5, this.n6, this.n7, this.n8, this.n9, this.divide, this.multiply, this.subtract, this.add, this.equal, this.reset, this.eliminar };
+		JButton[] buttons = { this.n0, this.n1, this.n2, this.n3, this.n4, this.n5, this.n6, this.n7, this.n8, this.n9, this.divide, this.multiply, this.subtract, this.add, this.equal, this.reset, this.eliminar, this.coma };
 		for (JButton button : buttons) {
 			button.addActionListener(this);
 		}
@@ -195,6 +202,7 @@ public class Engine extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand(); // Contiene el contenido del boton
+		String textoActual = this.pantalla.getText();
 		switch (comando) {
 		case "0":
 			this.pantalla.setText(this.pantalla.getText() + comando);
@@ -228,14 +236,14 @@ public class Engine extends JFrame implements ActionListener {
 			break;
 		case "+":
 			if (!this.pantalla.getText().isEmpty()) {
-				this.num1 = Integer.parseInt(pantalla.getText());
+				this.num1 = Double.parseDouble(pantalla.getText());
 				this.operation = comando.charAt(0);
 				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
 			}
 			break;
 		case "-":
 			if (!this.pantalla.getText().isEmpty()) {
-				this.num1 = Integer.parseInt(pantalla.getText());
+				this.num1 = Double.parseDouble(pantalla.getText());
 				this.operation = comando.charAt(0);
 				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
 			} else {
@@ -245,25 +253,25 @@ public class Engine extends JFrame implements ActionListener {
 			break;
 		case "/":
 			if (!this.pantalla.getText().isEmpty()) {
-				this.num1 = Integer.parseInt(pantalla.getText());
+				this.num1 = Double.parseDouble(pantalla.getText());
 				this.operation = comando.charAt(0);
 				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
 			}
 			break;
 		case "*":
 			if (!this.pantalla.getText().isEmpty()) {
-				this.num1 = Integer.parseInt(pantalla.getText());
+				this.num1 = Double.parseDouble(pantalla.getText());
 				this.operation = comando.charAt(0);
 				this.pantalla.setText(""); // Limpiar la pantalla para el segundo número
 			}
 			break;
 		case "=":
 			if (!this.pantalla.getText().isEmpty()) {
-				this.num2 = Integer.parseInt(pantalla.getText());
+				this.num2 = Double.parseDouble(pantalla.getText());
 				if (this.operation == '/' && this.num2 <= 0) {
 					this.pantalla.setText("Error: No se puede dividir entre 0");
 				}else {
-					this.result = operacion(this.num1, this.num2, this.operation);
+					this.result = operacion();
 					this.pantalla.setText(String.valueOf(this.result));
 				}
 				
@@ -276,26 +284,28 @@ public class Engine extends JFrame implements ActionListener {
 			this.num2 = 0;
 			break;
 		case "←":
-			String textoActual = this.pantalla.getText();
 			if (!textoActual.isEmpty()) {
 				this.pantalla.setText(textoActual.substring(0, textoActual.length()-1));
 			}
-
+			break;
+		case ".":
+			this.pantalla.setText(this.pantalla.getText() + comando);
+			break;
 		default:
 		}
 
 	}
 
-	private int operacion(int num1, int num2, char operador) {
-		switch (operation) {
+	private double operacion() {
+		switch (this.operation) {
 		case '+':
-			return num1 + num2;
+			return this.num1 + this.num2;
 		case '-':
-			return num1 - num2;
+			return this.num1 - this.num2;
 		case '*':
-			return num1 * num2;
+			return this.num1 * this.num2;
 		case '/':
-			return num1 / num2;
+			return this.num1 / this.num2;
 		default:
 			return 0;
 		}
